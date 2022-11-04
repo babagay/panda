@@ -1,0 +1,30 @@
+{
+    money Heist info
+    {
+        the most important char: Professor
+    }
+    {
+        another char is that of Berlin
+        {
+            Berlin is in charge of the money heist
+        }
+        another char is that of Moscow
+        {
+            Moscow is Danver's dad
+        }
+        another char is that of Rio
+        {
+            Rio is a programmer
+            {
+                Rio is also a decent hacker
+                {
+                    Rio is quite happy to be a part of the heist
+                }
+            }
+        }
+    }
+    {
+        Another character is that of Denver
+    }
+	Jovanny geist info
+}
