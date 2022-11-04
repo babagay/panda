@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  */
 public class Solution {
 
-    private static String testContent = "{ text1 { text2 } }";   // test data
+    private static String testContent = "{ text1 { text2 } }"; // test data
     private static int testLevel = 1;
 
     public static void main(String[] args) throws Exception {
