@@ -1,7 +1,6 @@
 package com.intro.extract;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -10,10 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.function.ObjIntConsumer;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -90,27 +86,32 @@ public class Result {
     private static String regExpInternalTextStart = "^(?<" + CATCH_GROUP_PLAIN_TEXT_FIRST_PIECE + ">[\\w][\\w :']+\\{)?";
     private static Pattern patternInternalTextStart = Pattern.compile(regExpInternalTextStart);
 
+    public static List<String> extractData(String input, int level) throws Exception {
+        return extractData(Pattern.compile("\\R").splitAsStream(input), level);
+    }
+
     /**
      * A brut force solution
-     *      which makes the whole text parsing in spite of the level of data we wanna get
-     *      To implement a quick exit the RuntimeException could be used, but it is also not a good practice
-     *
+     * which makes the whole text parsing in spite of the level of data we wanna get
+     * To implement a quick exit the RuntimeException could be used, but it is also not a good practice
+     * <p>
      * We use open braces stack (instead of incrementing the counter) to keep a possibility of storing node objects
      * which holds a brace position for instance to implement a more complex logic
      */
-    public static List<String> extractDataV3(Stream<String> input, int levelDesired) throws Exception {
+    public static List<String> extractData(Stream<String> input, int levelDesired) throws Exception {
 
         if (levelDesired < 1) throw new Exception("Given text is not valid");
 
         final Deque<String> openBracesStack = new LinkedList<>();
-        final StringBuilder buffer = new StringBuilder(); // StringBuilder is quick but to provide thread safety use StringBuffer
+        final StringBuilder buffer = new StringBuilder(); // StringBuilder is quick but use StringBuffer to provide thread safety
         final Map<Integer, List<String>> result = new HashMap<>();
 
         Consumer<Integer> storeBuffer = (givenLevel) -> {
             List<String> lst = Optional.ofNullable(result.get(givenLevel)).orElse(new ArrayList<>());
             String currentBuffer = buffer.toString().trim();
-            if (currentBuffer.length() > 0)
+            if (currentBuffer.length() > 0) {
                 lst.add(currentBuffer);
+            }
             result.put(givenLevel, lst);
             buffer.setLength(0);
         };
@@ -124,8 +125,7 @@ public class Result {
                         if (character.equals('{')) {
                             storeBuffer.accept(openBracesStack.size());
                             openBracesStack.push("{");
-                        }
-                        else if (character.equals('}')) {
+                        } else if (character.equals('}')) {
                             if (openBracesStack.isEmpty()) { // validation
                                 throw new RuntimeException(); // not a good practice but quick to implement
                             }
@@ -148,7 +148,7 @@ public class Result {
         return Optional.ofNullable(result.get(levelDesired)).orElse(Collections.EMPTY_LIST);
     }
 
-    public static List<String> extractDataV2(String hierarchicalData, int level) {
+    public static List<String> extractDataV1(String hierarchicalData, int level) {
 
         // pre-processing
         String data = hierarchicalData.replaceFirst("\\s++$", "").trim();

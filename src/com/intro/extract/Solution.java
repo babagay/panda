@@ -5,68 +5,48 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Extract data from given string
- * and arrange it by lavels
+ * and arrange it by levels
  */
 public class Solution {
 
-    // test data
-    private static String testContent = """
-                     {  
-                       	  money Heist info  
-                             {  
-                      	    	the most important char: Professor
-                             }
-                             {  
-                      		    another char is that of Berlin  
-                                {  
-                      			    Berlin is in charge of the money heist 
-                                }
-                      		    another char is that of Moscow 
-                                { 
-                      		    	Moscow is Danver's dad 
-                                }
-                      		    another char is that of Rio 
-                                {  
-                      			    Rio is a programmer  
-                                     { 
-                      				    Rio is also a decent hacker
-                                      {  
-                      				    	Rio is quite happy to be a part of the heist
-                                         }
-                                   }
-                                }
-                            }	 
-                            {  
-                      	 	 \s	Another character is that of Denver  
-                            }
-                            Jovanny geist info
-                      }
-            """;
-
+    private static String testContent = "{ text1 { text2 } }";   // test data
     private static int testLevel = 1;
 
     public static void main(String[] args) throws Exception {
+        // use string as input
+
+        Pair pair = getConsoleContent();
+        testLevel = pair.level;
+        testContent = pair.text; // from console
+
+        // testContent = Files.lines(Path.of("test.txt")).reduce(String::concat).orElse(""); // from file
+
+        List<String> result = Result.extractData(testContent, testLevel);
+
+        System.out.println(result);
+    }
+
+    public static void main1(String[] args) throws Exception {
         // use a stream as input to avoid OutOfMemory error, e.g. when we process a huge file
 
         // Stream<String> input = Files.lines(Path.of("test.txt")); // from file
 
         Stream<String> input = Pattern.compile("\\R").splitAsStream(testContent); // from string
 
-        List<String> result = Result.extractDataV3(input, testLevel);
+        List<String> result = Result.extractData(input, testLevel);
 
         System.out.println(result);
     }
 
-    public static void _main(String[] args) throws IOException {
+    public static void main2(String[] args) throws IOException {
         // use given string as input
 
         String content = testContent;
@@ -77,7 +57,7 @@ public class Solution {
         // level = pair.level;
         // content = pair.text;
 
-        List<String> lines = Result.extractDataV2(content.replace("\\n", "\n"), level);
+        List<String> lines = Result.extractDataV1(content.replace("\\n", "\n"), level);
         List<String> finalLines = new ArrayList<>();
         for (String line : lines) {
             finalLines.add(line.trim());
