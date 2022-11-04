@@ -70,9 +70,7 @@ import java.util.stream.Stream;
 //      Input: the given string and 5
 //      Result: [Rio is quite happy to be a part of the heist]
 
-
 public class Result {
-
 
     private static String CATCH_GROUP_PLAIN_TEXT_PIECE = "PLAINTEXTPIECE";
     private static String CATCH_GROUP_PLAIN_TEXT_FIRST_PIECE = "PLAINTEXTFIRSTPIECE";
